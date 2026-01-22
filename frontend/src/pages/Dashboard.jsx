@@ -28,7 +28,19 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-6">
-      <h1 className="text-2xl mb-4">My Projects</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">My Projects</h1>
+
+        <button
+          onClick={() => {
+            localStorage.removeItem("token");
+            window.location.href = "/";
+          }}
+          className="bg-red-600 px-3 py-1 rounded text-sm"
+        >
+          Logout
+        </button>
+      </div>
 
       {/* Create Project */}
       <form onSubmit={createProject} className="mb-6 flex gap-2 flex-wrap">
@@ -45,9 +57,7 @@ export default function Dashboard() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <button className="bg-green-600 px-4 py-2 rounded">
-          Create
-        </button>
+        <button className="bg-green-600 px-4 py-2 rounded">Create</button>
       </form>
 
       {/* Project List */}

@@ -8,6 +8,8 @@ export default function ProjectDetails() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("Medium");
+  const [filterStatus, setFilterStatus] = useState("All");
+  const [search, setSearch] = useState("");
 
   const fetchTickets = async () => {
     const res = await API.get(`/tickets/${id}`);
@@ -26,6 +28,14 @@ export default function ProjectDetails() {
     setDescription("");
     fetchTickets();
   };
+
+  const filteredTickets = tickets.filter((t) => {
+    const matchStatus = filterStatus === "All" || t.status === filterStatus;
+
+    const matchSearch = t.title.toLowerCase().includes(search.toLowerCase());
+
+    return matchStatus && matchSearch;
+  });
 
   useEffect(() => {
     fetchTickets();
@@ -62,9 +72,29 @@ export default function ProjectDetails() {
         <button className="bg-green-600 px-4">Create</button>
       </form>
 
+      <div className="flex gap-3 mb-4">
+        <select
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+          className="text-black p-2"
+        >
+          <option value="All">All</option>
+          <option value="Todo">Todo</option>
+          <option value="InProgress">In Progress</option>
+          <option value="Done">Done</option>
+        </select>
+
+        <input
+          className="p-2 text-black"
+          placeholder="Search ticket..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
       {/* Ticket List */}
       <div className="space-y-3">
-        {tickets.map((t) => (
+        {filteredTickets.map((t) => (
           <div key={t._id} className="bg-gray-800 p-3 rounded">
             <div className="flex justify-between items-center mb-2">
               <h3 className="font-semibold">{t.title}</h3>
