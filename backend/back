@@ -1,0 +1,15 @@
+install node.js dependencies and intiates a new nodejs project, install express mongoose cors dotenv bcryptjs jsonwebtoken.
+find mongo uri : goes to the mongodbcloud, create a free cluster, add database user, copy uri update username and password
+create folder structure
+write basic server.js
+
+
+cd backend
+npm init -y
+
+npm install express mongoose cors dotenv bcryptjs jsonwebtoken
+npm install nodemon --save-dev
+
+
+tested the auth apis
+tested the project apis

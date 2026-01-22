@@ -1,0 +1,18 @@
+cd ../frontend
+// install vite to 
+npm create vite@latest . - is used to quickly scaffold (set up) a new web development project using Vite in the current directory
+# choose React
+npm install
+npm install axios react-router-dom
+
+// install tailwind css
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+
+//github setup 
+git init
+git add .
+git commit -m "Initial MERN setup"
+
+
+install axios, create api helper
