@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import API from "../api";
+import KanbanBoard from "../components/KanbanBoard";
 
 export default function ProjectDetails() {
   const { id } = useParams();
@@ -118,75 +119,45 @@ export default function ProjectDetails() {
         />
       </div>
 
-      {/* Ticket List */}
-      <div className="space-y-3">
+      {/* Kanban Board */}
+      <h2 className="text-xl mb-3">Kanban Board</h2>
+
+      <KanbanBoard tickets={filteredTickets} refresh={fetchTickets} />
+
+      {/* Comments Section (below Kanban) */}
+      <div className="mt-8 space-y-4">
         {filteredTickets.map((t) => (
           <div key={t._id} className="bg-gray-800 p-3 rounded">
-            <div className="flex justify-between items-center mb-2">
-              <h3 className="font-semibold">{t.title}</h3>
+            <h3 className="font-semibold mb-2">{t.title}</h3>
 
-              <select
-                value={t.status}
-                onChange={async (e) => {
-                  await API.put(`/tickets/${t._id}/status`, {
-                    status: e.target.value,
-                  });
-                  fetchTickets();
-                }}
-                className="text-black p-1 text-sm"
-              >
-                <option value="Todo">Todo</option>
-                <option value="InProgress">In Progress</option>
-                <option value="Done">Done</option>
-              </select>
+            <div className="space-y-1 mb-2">
+              {(comments[t._id] || []).map((c) => (
+                <p key={c._id} className="text-xs text-gray-300">
+                  <span className="font-semibold">{c.user.name}:</span>{" "}
+                  {c.text}
+                </p>
+              ))}
             </div>
 
-            <p className="text-sm text-gray-300">{t.description}</p>
-            <p className="text-xs text-gray-400 mb-2">
-              Priority: {t.priority}
-            </p>
+            <div className="flex gap-1">
+              <input
+                className="text-black p-1 text-xs flex-1"
+                placeholder="Add comment..."
+                value={commentText[t._id] || ""}
+                onChange={(e) =>
+                  setCommentText((prev) => ({
+                    ...prev,
+                    [t._id]: e.target.value,
+                  }))
+                }
+              />
 
-            <button
-              onClick={async () => {
-                await API.delete(`/tickets/${t._id}`);
-                fetchTickets();
-              }}
-              className="bg-red-600 px-3 py-1 text-xs rounded"
-            >
-              Delete
-            </button>
-
-            {/* Comments */}
-            <div className="mt-3">
-              <div className="space-y-1 mb-2">
-                {(comments[t._id] || []).map((c) => (
-                  <p key={c._id} className="text-xs text-gray-300">
-                    <span className="font-semibold">{c.user.name}:</span>{" "}
-                    {c.text}
-                  </p>
-                ))}
-              </div>
-
-              <div className="flex gap-1">
-                <input
-                  className="text-black p-1 text-xs flex-1"
-                  placeholder="Add comment..."
-                  value={commentText[t._id] || ""}
-                  onChange={(e) =>
-                    setCommentText((prev) => ({
-                      ...prev,
-                      [t._id]: e.target.value,
-                    }))
-                  }
-                />
-
-                <button
-                  onClick={() => addComment(t._id)}
-                  className="bg-blue-600 px-2 text-xs rounded"
-                >
-                  Send
-                </button>
-              </div>
+              <button
+                onClick={() => addComment(t._id)}
+                className="bg-blue-600 px-2 text-xs rounded"
+              >
+                Send
+              </button>
             </div>
           </div>
         ))}

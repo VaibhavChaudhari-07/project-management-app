@@ -16,3 +16,5 @@ git commit -m "Initial MERN setup"
 
 
 install axios, create api helper
+
+npm install @hello-pangea/dnd //libary for drag and drop 
